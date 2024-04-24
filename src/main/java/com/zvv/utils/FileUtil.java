@@ -6,8 +6,7 @@ import java.nio.file.Paths;
 
 public class FileUtil {
     private FileUtil() {
-
-    };
+    }
 
     public static void checkIfFileExists(File file) {
         if (!file.isFile()) {

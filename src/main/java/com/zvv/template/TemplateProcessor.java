@@ -53,24 +53,25 @@ public class TemplateProcessor {
             System.err.println("Template '" + line + "' is not valid. Ignoring.");
             return Optional.empty();
         }
+        String lowerLine = line.toLowerCase();
         try {
             boolean isLetterNowGoing = true;
             Map<Character, Integer> letterMap = new HashMap<>();
-            for (int i = 0; i < line.length() - 1; i++) {
-                char c = line.charAt(i);
+            for (int i = 0; i < lowerLine.length() - 1; i++) {
+                char c = lowerLine.charAt(i);
                 if ((isLetterNowGoing && !Character.isLetter(c) && !Character.isDigit(c))
                         || (!isLetterNowGoing && Character.isLetter(c))) {
-                    System.err.println("Template '" + line + "' is not valid. Ignoring.");
+                    System.err.println("Template '" + lowerLine + "' is not valid. Ignoring.");
                     return Optional.empty();
                 }
                 if (isLetterNowGoing) {
-                    letterMap.put(c, Character.getNumericValue(line.charAt(i + 1)));
+                    letterMap.put(c, Character.getNumericValue(lowerLine.charAt(i + 1)));
                 }
                 isLetterNowGoing = !isLetterNowGoing;
             }
             return Optional.of(new Template(letterMap));
         } catch (Exception e) {
-            System.err.println("Template '" + line + "' is not valid. Ignoring.");
+            System.err.println("Template '" + lowerLine + "' is not valid. Ignoring.");
             return Optional.empty();
         }
     }
@@ -79,7 +80,6 @@ public class TemplateProcessor {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(textFile));
             String line = reader.readLine();
-            reader.read();
             while (line != null) {
                 recountTemplateEntries(line);
                 // read next line
@@ -97,7 +97,7 @@ public class TemplateProcessor {
     private void recountTemplateEntries(String line) {
         List<String> words = StringUtil.splitInWords(line);
         for (String word : words) {
-            Map<Character, Integer> wordLetterMap = StringUtil.getLetterMap(word);
+            Map<Character, Integer> wordLetterMap = StringUtil.getLetterMap(word.toLowerCase());
             templates.forEach(template -> {
                 if (template.getLetterMap() != null) {
                     template.increaseIfMatch(wordLetterMap);
